@@ -24,10 +24,11 @@ def main():
     for i in range(num_criteria):
         criterion = st.text_input(f"Criterion {i+1}")
         evaluation_criteria.append(criterion)
-    
+
     model_choice = st.selectbox("Choose Model", [
         "OpenAI GPT-4o", "OpenAI GPT-4", "OpenAI GPT-3.5 Turbo",
-        "Anthropic claude-3-5-sonnet-20240620"
+        "Anthropic claude-3-5-sonnet-20240620",
+        'Llama 3.1'
     ])
     
     resume_folder = st.text_input("Resume Folder Path")
