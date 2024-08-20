@@ -1,9 +1,10 @@
 import os
 import re
+import json
 import time
-from handler.analysis_prompt import get_analysis_prompt
+from handlers.analysis_prompt import get_analysis_prompt
 from tenacity import retry, stop_after_attempt, wait_fixed
-from handler.models import openai_model, anthropic_model, groq_model
+from handlers.models import openai_model, anthropic_model, groq_model
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
@@ -17,7 +18,7 @@ def analyze_resume(job_description, evaluation_criteria, filename, content, mode
             if "OpenAI" in model_choice:
                 result = openai_model(model_choice, prompt)
             elif "Anthropic" in model_choice:
-                result = anthropic_model(prompt)
+                result = anthropic_model(model_choice,prompt)
             elif "Llama 3.1" in model_choice:
                 result = groq_model(prompt)
             else:
@@ -45,10 +46,18 @@ def analyze_resume(job_description, evaluation_criteria, filename, content, mode
                     "Explanation": f"Error: {str(e)}",
                     **{f"{criterion} Score": 0 for criterion in evaluation_criteria}
                 }
+            
+            
 
+def clean_json_string(json_str):
+    try:
+        parsed_json = json.loads(json_str)
+        return json.dumps(parsed_json)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        clean_str = json_str.replace('\n', ' ').replace('\r', '')
+        return clean_str
 
-import json
-import re
 
 def parse_result(result, filename, evaluation_criteria):
     try:
@@ -59,11 +68,13 @@ def parse_result(result, filename, evaluation_criteria):
             raise ValueError("No JSON object found in the response")
         
         json_str = result[json_start:json_end]
+
+        cleaned_json_str = clean_json_string(json_str)
         
         # parse the JSON output
-        parsed_json = json.loads(json_str)
+        parsed_json = json.loads(cleaned_json_str)
 
-        print(f"parsed_json: {parsed_json}")
+        # print(f"parsed_json: {parsed_json}")
 
         # Create the parsed result dictionary
         parsed_result = {
@@ -77,7 +88,6 @@ def parse_result(result, filename, evaluation_criteria):
         # Add scores for each evaluation criterion
         scores = parsed_json.get("scores", {})
         #print(f"scores_before: {scores}")
-
 
         for criterion in evaluation_criteria:
             normalized_criterion = criterion.replace('\xa0', ' ')

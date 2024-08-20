@@ -7,9 +7,9 @@ sys.path.insert(0, src_path)
 
 import streamlit as st
 import pandas as pd
-from handler.pdf_utils import get_resume_files, load_single_resume
+from handlers.pdf_utils import get_resume_files, load_single_resume
 from resume_analyzer.analyzer import analyze_resume
-from handler.env_vars import load_env_vars
+from handlers.env_vars import load_env_vars
 
 def main():
     load_env_vars()
@@ -27,7 +27,7 @@ def main():
 
     model_choice = st.selectbox("Choose Model", [
         "OpenAI GPT-4o", "OpenAI GPT-4", "OpenAI GPT-3.5 Turbo",
-        "Anthropic claude-3-5-sonnet-20240620",
+        "Anthropic claude-3-5-sonnet-20240620","Anthropic claude-3-opus-20240229",
         'Llama 3.1'
     ])
     

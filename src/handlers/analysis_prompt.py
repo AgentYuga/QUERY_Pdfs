@@ -47,7 +47,7 @@ def get_analysis_prompt(job_description, evaluation_criteria, filename, content)
     {' '.join([f'{i+1}. {criterion}' for i, criterion in enumerate(evaluation_criteria)])}
 
     **Resume Filename:** {filename}
-    **Resume Content:** {content[:4000]}...
+    **Resume Content:** {content[:5000]}...
 
     **Your Tasks:**
     1. Identify and Extract:
@@ -100,7 +100,7 @@ def get_analysis_prompt(job_description, evaluation_criteria, filename, content)
       "scores": {{
         {', '.join([f'"{criterion.lower().replace(" ", "_")}_score": [Score]' for criterion in evaluation_criteria])}
       }},
-      "explanation": "[Provide a brief summary of the resume in about 6-8 lines and an explanation for the overall score and each criterion scores]"
+      "explanation": "[Provide a brief summary of the resume in about 6-8 lines with an explanation for the overall score and each criterion scores]"
     }}
     ```
 

@@ -1,5 +1,5 @@
 import os
-from handler.env_vars import load_env_vars
+from handlers.env_vars import load_env_vars
 from openai import OpenAI
 from anthropic import Anthropic
 from langchain_groq import ChatGroq
@@ -34,9 +34,12 @@ def openai_model(model_choice, prompt):
     )
     return response.choices[0].message.content.strip()
 
-def anthropic_model(prompt):
+def anthropic_model(model_choice,prompt):
     client = anthropic_client()
-    model = "claude-3-5-sonnet-20240620"
+    model = {
+        "Anthropic claude-3-5-sonnet-20240620":"claude-3-5-sonnet-20240620",
+        "Anthropic claude-3-opus-20240229":"claude-3-opus-20240229"
+    }.get(model_choice)
     response = client.messages.create(
         model=model,
         messages=[{"role": "user", "content": prompt}],
