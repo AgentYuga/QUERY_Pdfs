@@ -22,7 +22,7 @@ The Query and Summarize PDFs project utilizes OpenAI and Anthropic to summarize 
         conda activate.bat venv/
     3. Install the required dependencies:
         pip install -r requirements.txt
-    4. Set up your API keys in the `src/handler/.env` file:
+    4. Set up your API keys in the `src/handlers/.env` file:
         OPENAI_API_KEY=""
         ANTHROPIC_API_KEY=""
 # Running the app
